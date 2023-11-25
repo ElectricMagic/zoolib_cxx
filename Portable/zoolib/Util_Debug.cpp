@@ -138,9 +138,17 @@ public:
 		else if (iPriority <= Log::ePriority_Info) theLevel = ANDROID_LOG_INFO;
 		else if (iPriority <= Log::ePriority_Debug) theLevel = ANDROID_LOG_DEBUG;
 
-		__android_log_print(theLevel, iName.c_str(), "%s", iMessage.c_str());
-		}
+		static char delimiters[] = "\n";
 
+		for (size_t prior = 0; /*no test*/; /*no inc*/)
+			{
+			const size_t next = iMessage.find_first_of(delimiters, prior);
+			int length = __android_log_print(theLevel, iName.c_str(), "%s", iMessage.substr(prior, next - prior).c_str());
+			if (next == string::npos)
+				break;
+			prior = next + 1;
+			}
+		}
 	};
 
 #endif // defined(__ANDROID__)
