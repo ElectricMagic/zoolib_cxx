@@ -83,7 +83,7 @@ ZQ<Map_ZZ> Sieve_Singleton::QGetMap()
 			{
 			// Take basic value from what's in fMapInDaton.
 			fMapQ = fMapInDaton;
-			// Put anything that's in our Result under what's in fMapInDaton.
+			// Put anything that's in our Result beneath what's in fMapInDaton.
 			const RelHead theRelHead = fResult->GetRelHead();
 			const Val_DB* theVals = fResult->GetValsAt(0);
 			foreachv (const string8& theName, theRelHead)
