@@ -210,6 +210,18 @@ EnsureAttachedToCurrentThread::~EnsureAttachedToCurrentThread()
 	}
 
 // =================================================================================================
+#pragma mark - JNI::GlobalRefDeleter
+
+GlobalRefDeleter::GlobalRefDeleter(jobject iGlobalRef)
+:	fGlobalRef(iGlobalRef)
+	{
+	ZAssert(JNIGlobalRefType == EnvTV::sGet()->GetObjectRefType(iGlobalRef));
+	}
+
+GlobalRefDeleter::~GlobalRefDeleter()
+	{ EnvTV::sGet()->DeleteGlobalRef(fGlobalRef); }
+
+// =================================================================================================
 #pragma mark - PushPopLocalFrame
 
 PushPopLocalFrame::PushPopLocalFrame(JNIEnv* iEnv, size_t iSlots)

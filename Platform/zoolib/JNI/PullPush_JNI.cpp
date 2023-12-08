@@ -513,21 +513,26 @@ jobject sAsJNI(const Val_ZZ& iVal)
 // =================================================================================================
 #pragma mark - sChannerR_PPT
 
-static void spFromJNI_Push_PPT_Disconnect(jobject iObject,
+static void spFromJNI_Push_PPT_Disconnect(jobject iGlobalRef,
 	const ZP<ChannerWCon_PPT>& iChannerWCon)
 	{
-	EnsureAttachedToCurrentThread eatct(JNI::sJavaVM());
-	sFromJNI_Push_PPT(iObject, *iChannerWCon);
+	EnsureAttachedToCurrentThread eatct(sJavaVM());
+
+	GlobalRefDeleter grd(iGlobalRef);
+
+	sFromJNI_Push_PPT(iGlobalRef, *iChannerWCon);
 	sDisconnectWrite(*iChannerWCon);
 	}
 
 ZP<ChannerR_PPT> sChannerR_PPT(jobject iJObject)
 	{
+	JNIEnv* env = EnvTV::sGet();
+
 	PullPushPair<PPT> thePair = sMakePullPushPair<PPT>();
 
 	sStartOnNewThread(
 		sBindR(sCallable(spFromJNI_Push_PPT_Disconnect),
-			iJObject, sGetClear(thePair.first)));
+			env->NewGlobalRef(iJObject), sGetClear(thePair.first)));
 
 	return thePair.second;
 	}

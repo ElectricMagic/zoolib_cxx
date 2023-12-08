@@ -79,6 +79,19 @@ private:
 	};
 
 // =================================================================================================
+#pragma mark - JNI::GlobalRefDeleter
+
+class GlobalRefDeleter
+	{
+public:
+	GlobalRefDeleter(jobject iGlobalRef);
+	~GlobalRefDeleter();
+
+private:
+	jobject fGlobalRef;
+	};
+
+// =================================================================================================
 #pragma mark - JNI::PushPopLocalFrame
 
 constexpr size_t kLocalFrameSlots = 16;
