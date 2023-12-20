@@ -218,7 +218,6 @@ void sWriteBacktrace(const ChanW_UTF& iChanW)
 	#endif
 	}
 
-
 void sInstall()
 	{
 	if (not ZCONFIG_SPI_Enabled(Win))
