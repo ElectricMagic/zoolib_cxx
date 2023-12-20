@@ -13,6 +13,10 @@
 #import <Foundation/NSDate.h>
 #import <Foundation/NSString.h>
 
+#include "Foundation/NSObjCRuntime.h"
+
+#include <objc/runtime.h>
+
 using std::vector;
 
 using namespace ZooLib;
@@ -252,7 +256,35 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 @implementation NSNumber (ZooLib_asZZWithDefault)
 
 -(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
-	{ return int64([self longLongValue]); }
+	{
+	NSLog(@"nsnum %@ %s, %@, %@", self, [self objCType], [self class], NSStringFromClass([self class]));
+
+	if (const char* type = [self objCType])
+		{
+		switch (type[0])
+			{
+			case _C_CHR:
+				{
+				if ([@"__NSCFBoolean" isEqualToString:NSStringFromClass([self class])])
+					return bool([self boolValue]);
+				return char([self charValue]);
+				}
+			case _C_UCHR: return [self unsignedCharValue];
+			case _C_SHT: return [self shortValue];
+			case _C_USHT: return [self unsignedShortValue];
+			case _C_INT: return [self intValue];
+			case _C_UINT: return [self unsignedIntValue];
+			case _C_LNG: return [self longValue];
+			case _C_ULNG: return [self unsignedLongValue];
+			case _C_LNG_LNG: return [self longLongValue];
+			case _C_ULNG_LNG: return [self unsignedLongLongValue];
+			case _C_FLT: return [self floatValue];
+			case _C_DBL: return [self doubleValue];
+			}
+		}
+
+	return iDefault;
+	}
 
 @end
 
@@ -269,3 +301,39 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 @end
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
+
+/*
+
+// From objc/runtime.h
+#define _C_ID       '@'
+#define _C_CLASS    '#'
+#define _C_SEL      ':'
+#define _C_CHR      'c'
+#define _C_UCHR     'C'
+#define _C_SHT      's'
+#define _C_USHT     'S'
+#define _C_INT      'i'
+#define _C_UINT     'I'
+#define _C_LNG      'l'
+#define _C_ULNG     'L'
+#define _C_LNG_LNG  'q'
+#define _C_ULNG_LNG 'Q'
+#define _C_FLT      'f'
+#define _C_DBL      'd'
+#define _C_BFLD     'b'
+#define _C_BOOL     'B'
+#define _C_VOID     'v'
+#define _C_UNDEF    '?'
+#define _C_PTR      '^'
+#define _C_CHARPTR  '*'
+#define _C_ATOM     '%'
+#define _C_ARY_B    '['
+#define _C_ARY_E    ']'
+#define _C_UNION_B  '('
+#define _C_UNION_E  ')'
+#define _C_STRUCT_B '{'
+#define _C_STRUCT_E '}'
+#define _C_VECTOR   '!'
+#define _C_CONST    'r'
+
+*/
