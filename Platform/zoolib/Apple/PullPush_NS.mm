@@ -113,7 +113,7 @@ static bool sPull_PPT_AsNS(const PPT& iPPT, const ChanR_PPT& iChanR, NSObject*& 
 		return true;
 		}
 
-	oNSObject = sDAsNSObject(nullptr, iPPT.As<Val_ZZ>());
+	oNSObject = sAsNSObject(iPPT.As<Val_ZZ>());
 
 	if (not oNSObject)
 		oNSObject = [NSNull null];
@@ -260,18 +260,20 @@ NSObject* sAsNS(const ChanR_PPT& iChanR)
 
 -(bool)pushPPT:(const ChanW_PPT&)iChanW
 	{
+	// c.f. Util_NS_ZZ
+
 	const char* subType = [self objCType];
 	switch (subType[0])
 		{
 		case 'c': sPush([self charValue], iChanW); return true;
-		case 'i': sPush([self intValue], iChanW); return true;
 		case 's': sPush([self shortValue], iChanW); return true;
+		case 'i': sPush([self intValue], iChanW); return true;
 		case 'l': sPush([self longValue], iChanW); return true;
 		case 'q': sPush([self longLongValue], iChanW); return true;
 
 		case 'C': sPush([self unsignedCharValue], iChanW); return true;
-		case 'I': sPush([self unsignedIntValue], iChanW); return true;
 		case 'S': sPush([self unsignedShortValue], iChanW); return true;
+		case 'I': sPush([self unsignedIntValue], iChanW); return true;
 		case 'L': sPush([self unsignedLongValue], iChanW); return true;
 		case 'Q': sPush([self unsignedLongLongValue], iChanW); return true;
 
@@ -298,6 +300,7 @@ NSObject* sAsNS(const ChanR_PPT& iChanR)
 	}
 
 @end
+
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
 
 //@"c" : @"char",
@@ -313,6 +316,7 @@ NSObject* sAsNS(const ChanR_PPT& iChanR)
 //@"f" : @"float",
 //@"d" : @"double",
 //@"B" : @"bool",
+
 //@"v" : @"void",
 //@"*" : @"char *",
 //@"r" : @"const char",     /* Used with char * return types */

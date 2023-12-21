@@ -13,8 +13,6 @@
 #import <Foundation/NSDate.h>
 #import <Foundation/NSString.h>
 
-#include "Foundation/NSObjCRuntime.h"
-
 #include <objc/runtime.h>
 
 using std::vector;
@@ -27,24 +25,24 @@ namespace Util_NS {
 // =================================================================================================
 #pragma mark - Util_NS
 
-Val_ZZ sDAsZZ(const Val_ZZ& iDefault, NSObject* iVal)
+ZQ<Val_ZZ> sQAsZZ(NSObject* iVal)
 	{
 	if (iVal)
 		{
 		@try
 			{
-			return [iVal asZZWithDefault:iDefault];
+			return [iVal asZZ];
 			}
 		@catch (id ex)
 			{}
 		}
-	return iDefault;
+	return null;
 	}
 
 Val_ZZ sAsZZ(NSObject* iVal)
-	{ return sDAsZZ(Val_ZZ(), iVal); }
+	{ return sQAsZZ(iVal) | Val_ZZ(); }
 
-NSObject* sDAsNSObject(NSObject* iDefault, const Val_ZZ& iVal)
+NSObject* sAsNSObject(const Val_ZZ& iVal)
 	{
 	if (false)
 		{}
@@ -74,7 +72,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const Val_ZZ& iVal)
 		{
 		NSMutableArray* theArray = sArrayMutable();
 		for (size_t xx = 0, count = theValue->Size(); xx < count; ++xx)
-			[theArray addObject:sDAsNSObject(iDefault, theValue->Get(xx))];
+			[theArray addObject:sAsNSObject(theValue->Get(xx))];
 		return theArray;
 		}
 	else if (const Map_ZZ* theValue = iVal.PGet<Map_ZZ>())
@@ -83,7 +81,7 @@ NSObject* sDAsNSObject(NSObject* iDefault, const Val_ZZ& iVal)
 		for (Map_ZZ::Index_t ii = theValue->Begin(), end = theValue->End(); ii != end; ++ii)
 			{
 			[theDictionary
-				setObject:sDAsNSObject(iDefault, theValue->Get(ii))
+				setObject:sAsNSObject(theValue->Get(ii))
 				forKey:sString(theValue->NameOf(ii))];
 			}
 		return theDictionary;
@@ -153,53 +151,51 @@ NSObject* sDAsNSObject(NSObject* iDefault, const Val_ZZ& iVal)
 		return [NSNumber numberWithDouble:double(*theValue)];
 		}
 
-	return iDefault;
+	return nullptr;
 	}
-
-NSObject* sAsNSObject(const Val_ZZ& iVal)
-	{ return sDAsNSObject([NSNull null], iVal); }
 
 } // namespace Util_NS
 } // namespace ZooLib
 
 // =================================================================================================
-@implementation NSObject (ZooLib_asZZWithDefault)
+@implementation NSObject (ZooLib_asZZ)
 
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+-(Val_ZZ)asZZ
 	{
-	// Hmm, log and return null or what?
-	ZDebugLogf(0, ("NSObject (ZooLib_asZZWithDefault) asZZWithDefault called"));
-	return iDefault;
+	@throw [NSException
+		exceptionWithName:@"unhandled"
+		reason:@"Unhandled type"
+		userInfo:nil];
 	}
 
 @end
 
 // =================================================================================================
-@interface NSNull (ZooLib_asZZWithDefault)
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
+@interface NSNull (ZooLib_asZZ)
+-(Val_ZZ)asZZ;
 @end
 
-@implementation NSNull (ZooLib_asZZWithDefault)
+@implementation NSNull (ZooLib_asZZ)
 
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+-(Val_ZZ)asZZ
 	{ return Val_ZZ(); }
 
 @end
 
 // =================================================================================================
-@interface NSDictionary (ZooLib_asZZWithDefault)
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
+@interface NSDictionary (ZooLib_asZZ)
+-(Val_ZZ)asZZ;
 @end
 
-@implementation NSDictionary (ZooLib_asZZWithDefault)
+@implementation NSDictionary (ZooLib_asZZ)
 
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+-(Val_ZZ)asZZ
 	{
 	Map_ZZ result;
 	for (id theKey, ii = [self keyEnumerator]; (theKey = [ii nextObject]); /*no inc*/)
 		{
 		const string8 theName = Util_NS::sAsUTF8((NSString*)theKey);
-		const Val_ZZ theVal = [[self objectForKey:theKey] asZZWithDefault:iDefault];
+		const Val_ZZ theVal = [[self objectForKey:theKey] asZZ];
 		result.Set(theName, theVal);
 		}
 	return result;
@@ -208,66 +204,74 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 @end
 
 // =================================================================================================
-@interface NSArray (ZooLib_asZZWithDefault)
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
+@interface NSArray (ZooLib_asZZ)
+-(Val_ZZ)asZZ;
 @end
 
-@implementation NSArray (ZooLib_asZZWithDefault)
+@implementation NSArray (ZooLib_asZZ)
 
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+-(Val_ZZ)asZZ
 	{
 	Seq_ZZ result;
 	for (id theValue, ii = [self objectEnumerator]; (theValue = [ii nextObject]); /*no inc*/)
-		result.Append([theValue asZZWithDefault:iDefault].As<Val_ZZ>());
+		result.Append([theValue asZZ].As<Val_ZZ>());
 	return result;
 	}
 
 @end
 
 // =================================================================================================
-@interface NSData (ZooLib_asZZWithDefault)
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
+@interface NSData (ZooLib_asZZ)
+-(Val_ZZ)asZZ;
 @end
 
-@implementation NSData (ZooLib_asZZWithDefault)
+@implementation NSData (ZooLib_asZZ)
 
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+-(Val_ZZ)asZZ
 	{ return Data_ZZ([self bytes], [self length]); }
 
 @end
 
 // =================================================================================================
-@interface NSString (ZooLib_asZZWithDefault)
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
+@interface NSString (ZooLib_asZZ)
+-(Val_ZZ)asZZ;
 @end
 
-@implementation NSString (ZooLib_asZZWithDefault)
+@implementation NSString (ZooLib_asZZ)
 
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+-(Val_ZZ)asZZ
 	{ return string8([self UTF8String]); }
 
 @end
 
 // =================================================================================================
-@interface NSNumber (ZooLib_asZZWithDefault)
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
+@interface NSNumber (ZooLib_asZZ)
+-(Val_ZZ)asZZ;
 @end
 
-@implementation NSNumber (ZooLib_asZZWithDefault)
+@implementation NSNumber (ZooLib_asZZ)
 
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+-(Val_ZZ)asZZ
 	{
-	NSLog(@"nsnum %@ %s, %@, %@", self, [self objCType], [self class], NSStringFromClass([self class]));
+	// c.f. PullPush_NS
+
+	NSLog(@"nsnumrevised %@ %s, %@, %@", self, [self objCType], [self class], NSStringFromClass([self class]));
 
 	if (const char* type = [self objCType])
 		{
 		switch (type[0])
 			{
+			// _C_xxx constants are defined in objc/runtime.h
 			case _C_CHR:
 				{
-				if ([@"__NSCFBoolean" isEqualToString:NSStringFromClass([self class])])
-					return bool([self boolValue]);
-				return char([self charValue]);
+				NSString* selfClassName = NSStringFromClass([self class]);
+				// CoreFoundation
+				if ([@"__NSCFBoolean" isEqualToString:selfClassName])
+					return [self boolValue];
+				// Kotlin
+				if ([@"SharedBoolean" isEqualToString:selfClassName])
+					return [self boolValue];
+				return [self charValue];
 				}
 			case _C_UCHR: return [self unsignedCharValue];
 			case _C_SHT: return [self shortValue];
@@ -280,60 +284,30 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 			case _C_ULNG_LNG: return [self unsignedLongLongValue];
 			case _C_FLT: return [self floatValue];
 			case _C_DBL: return [self doubleValue];
+			case _C_BOOL: return [self boolValue];
 			}
 		}
 
-	return iDefault;
+	NSLog(@"throwing");
+
+	@throw [NSException
+		exceptionWithName:@"unhandled"
+		reason:@"Unhandled NSNumberVariant"
+		userInfo:nil];
 	}
 
 @end
 
 // =================================================================================================
-@interface NSDate (ZooLib_asZZWithDefault)
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault;
+@interface NSDate (ZooLib_asZZ)
+-(Val_ZZ)asZZ;
 @end
 
-@implementation NSDate (ZooLib_asZZWithDefault)
+@implementation NSDate (ZooLib_asZZ)
 
--(Val_ZZ)asZZWithDefault:(const Val_ZZ&)iDefault
+-(Val_ZZ)asZZ
 	{ return ZooLib::UTCDateTime([self timeIntervalSince1970]); }
 
 @end
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
-
-/*
-
-// From objc/runtime.h
-#define _C_ID       '@'
-#define _C_CLASS    '#'
-#define _C_SEL      ':'
-#define _C_CHR      'c'
-#define _C_UCHR     'C'
-#define _C_SHT      's'
-#define _C_USHT     'S'
-#define _C_INT      'i'
-#define _C_UINT     'I'
-#define _C_LNG      'l'
-#define _C_ULNG     'L'
-#define _C_LNG_LNG  'q'
-#define _C_ULNG_LNG 'Q'
-#define _C_FLT      'f'
-#define _C_DBL      'd'
-#define _C_BFLD     'b'
-#define _C_BOOL     'B'
-#define _C_VOID     'v'
-#define _C_UNDEF    '?'
-#define _C_PTR      '^'
-#define _C_CHARPTR  '*'
-#define _C_ATOM     '%'
-#define _C_ARY_B    '['
-#define _C_ARY_E    ']'
-#define _C_UNION_B  '('
-#define _C_UNION_E  ')'
-#define _C_STRUCT_B '{'
-#define _C_STRUCT_E '}'
-#define _C_VECTOR   '!'
-#define _C_CONST    'r'
-
-*/

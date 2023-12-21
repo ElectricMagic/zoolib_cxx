@@ -17,20 +17,19 @@ namespace Util_NS {
 // =================================================================================================
 #pragma mark - Util_NS
 
-Val_ZZ sDAsZZ(const Val_ZZ& iDefault, NSObject* iVal);
+ZQ<Val_ZZ> sQAsZZ(NSObject* iVal);
 Val_ZZ sAsZZ(NSObject* iVal);
 
-NSObject* sDAsNSObject(NSObject* iDefault, const Val_ZZ& iVal);
 NSObject* sAsNSObject(const Val_ZZ& iVal);
 
 } // namespace Util_NS
 } // namespace ZooLib
 
 // =================================================================================================
-#pragma mark - asZZWithDefault
+#pragma mark - asZZ
 
-@interface NSObject (ZooLib_asZZWithDefault)
--(ZooLib::Val_ZZ)asZZWithDefault:(const ZooLib::Val_ZZ&)iDefault;
+@interface NSObject (ZooLib_asZZ)
+-(ZooLib::Val_ZZ)asZZ;
 @end
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
