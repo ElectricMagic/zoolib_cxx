@@ -260,26 +260,10 @@ NSObject* sAsNS(const ChanR_PPT& iChanR)
 
 -(bool)pushPPT:(const ChanW_PPT&)iChanW
 	{
-	// c.f. Util_NS_ZZ
-
-	const char* subType = [self objCType];
-	switch (subType[0])
+	if (ZQ<Val_ZZ> theQ = sQAsZZ(self))
 		{
-		case 'c': sPush([self charValue], iChanW); return true;
-		case 's': sPush([self shortValue], iChanW); return true;
-		case 'i': sPush([self intValue], iChanW); return true;
-		case 'l': sPush([self longValue], iChanW); return true;
-		case 'q': sPush([self longLongValue], iChanW); return true;
-
-		case 'C': sPush([self unsignedCharValue], iChanW); return true;
-		case 'S': sPush([self unsignedShortValue], iChanW); return true;
-		case 'I': sPush([self unsignedIntValue], iChanW); return true;
-		case 'L': sPush([self unsignedLongValue], iChanW); return true;
-		case 'Q': sPush([self unsignedLongLongValue], iChanW); return true;
-
-		case 'f': sPush([self floatValue], iChanW); return true;
-		case 'd': sPush([self doubleValue], iChanW); return true;
-		case 'B': sPush([self boolValue], iChanW); return true;
+		sPush(theQ->As<PPT>(), iChanW);
+		return true;
 		}
 	return false;
 	}
@@ -302,26 +286,3 @@ NSObject* sAsNS(const ChanR_PPT& iChanR)
 @end
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
-
-//@"c" : @"char",
-//@"i" : @"int",
-//@"s" : @"short",
-//@"l" : @"long",
-//@"q" : @"long long",
-//@"C" : @"unsigned char",
-//@"I" : @"unsigned int",
-//@"S" : @"unsigned short",
-//@"L" : @"unsigned long",
-//@"Q" : @"unsigned long long",
-//@"f" : @"float",
-//@"d" : @"double",
-//@"B" : @"bool",
-
-//@"v" : @"void",
-//@"*" : @"char *",
-//@"r" : @"const char",     /* Used with char * return types */
-//@"@" : @"id",
-//@"#" : @"Class",
-//@":" : @"SEL",
-//@"?" : @"*",
-//@"{" : @"struct"

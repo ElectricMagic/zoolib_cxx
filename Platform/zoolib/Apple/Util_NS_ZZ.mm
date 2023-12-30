@@ -255,8 +255,6 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 	{
 	// c.f. PullPush_NS
 
-	NSLog(@"nsnumrevised %@ %s, %@, %@", self, [self objCType], [self class], NSStringFromClass([self class]));
-
 	if (const char* type = [self objCType])
 		{
 		switch (type[0])
@@ -288,11 +286,9 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 			}
 		}
 
-	NSLog(@"throwing");
-
 	@throw [NSException
 		exceptionWithName:@"unhandled"
-		reason:@"Unhandled NSNumberVariant"
+		reason:@"Unhandled NSNumber variant"
 		userInfo:nil];
 	}
 
@@ -311,3 +307,27 @@ NSObject* sAsNSObject(const Val_ZZ& iVal)
 @end
 
 #endif // ZCONFIG_SPI_Enabled(CocoaFoundation)
+
+
+//@"c" : @"char",
+//@"i" : @"int",
+//@"s" : @"short",
+//@"l" : @"long",
+//@"q" : @"long long",
+//@"C" : @"unsigned char",
+//@"I" : @"unsigned int",
+//@"S" : @"unsigned short",
+//@"L" : @"unsigned long",
+//@"Q" : @"unsigned long long",
+//@"f" : @"float",
+//@"d" : @"double",
+//@"B" : @"bool",
+
+//@"v" : @"void",
+//@"*" : @"char *",
+//@"r" : @"const char",     /* Used with char * return types */
+//@"@" : @"id",
+//@"#" : @"Class",
+//@":" : @"SEL",
+//@"?" : @"*",
+//@"{" : @"struct"
