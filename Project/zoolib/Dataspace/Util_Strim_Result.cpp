@@ -37,7 +37,7 @@ static void spToStrim(const ChanW_UTF& iChanW, const ZP<Result>& iResult)
 	const size_t theCount = iResult->Count();
 	const RelHead& theRH = iResult->GetRelHead();
 
-	iChanW << "⫷Count: " << theCount << ", RelHead: " << theRH;
+	iChanW << "⫷Count: " << theCount << ", RelHead: " << theRH << " ";
 
 	for (size_t yy = 0; yy < theCount; ++yy)
 		{
