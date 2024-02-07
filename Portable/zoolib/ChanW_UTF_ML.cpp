@@ -419,7 +419,7 @@ const ChanW_UTF_ML& ChanW_UTF_ML::Attr(const string8& iName, const string8& iVal
 						if (theCP < 0x20)
 							{
 							char smallEntity[7];
-							sprintf(smallEntity, "&#x%02X;", (unsigned int)theCP);
+							snprintf(smallEntity, sizeof(smallEntity), "&#x%02X;", (unsigned int)theCP);
 							newValue->append(smallEntity);
 							}
 						else
