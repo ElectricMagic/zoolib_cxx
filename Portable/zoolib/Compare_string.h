@@ -17,7 +17,7 @@ inline int sCompare_T(const std::string& iL, const std::string& iR)
 // =================================================================================================
 #pragma mark - FastComparator_String
 
-struct FastComparator_String : public std::binary_function<std::string,std::string,bool>
+struct FastComparator_String
 	{
 	bool operator()(const std::string& iLeft, const std::string& iRight) const;
 	};

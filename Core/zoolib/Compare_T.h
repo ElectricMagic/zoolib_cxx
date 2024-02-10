@@ -7,7 +7,6 @@
 #include "zoolib/ZDebug.h" // For ZUnimplemented
 #include "zoolib/ZTypes.h" // For EnableIfC
 
-#include <functional> // For std::binary_function
 
 namespace ZooLib {
 
@@ -82,7 +81,7 @@ inline int sCompare_T(const std::pair<S,T>& iLeft, const std::pair<S,T>& iRight)
 #pragma mark - Less_Compare_T, less<>-style functor implemented in terms of sCompare_T
 
 template <class T>
-struct Less_Compare_T : public std::binary_function<T,T,bool>
+struct Less_Compare_T
 	{
 	bool operator()(const T& iLeft, const T& iRight) const
 		{ return sCompare_T(iLeft, iRight) < 0; }
