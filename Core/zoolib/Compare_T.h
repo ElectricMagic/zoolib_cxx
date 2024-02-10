@@ -7,7 +7,6 @@
 #include "zoolib/ZDebug.h" // For ZUnimplemented
 #include "zoolib/ZTypes.h" // For EnableIfC
 
-
 namespace ZooLib {
 
 // =================================================================================================
