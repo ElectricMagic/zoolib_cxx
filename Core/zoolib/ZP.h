@@ -290,7 +290,7 @@ void sRefCopy(void* oDest, T* iPtr)
 // is required, and either are compatible with the base CFTypeRef.
 
 
-// Some APIs (eg Windows HANDLE, Apple's xpc) return a fresh 'pointer' for each
+// Some APIs (eg Windows' HANDLE, Apple's xpc) return a fresh 'pointer' for each
 // retain, so it's an IO param just in case.
 template <class T> void sRetain_T(T*& ioPtr);
 template <class T> void sRelease_T(T* iPtr);
