@@ -294,7 +294,8 @@ public:
 		PPT* localDest = oDest;
 		for (PPT* const localDestEnd = oDest + iCount; localDest < localDestEnd; /*no inc*/)
 			{
-			if (ZQ<PPT> theQ = sQRead(*fChanner); not theQ)
+			const ZQ<PPT> theQ = sQRead(*fChanner);
+			if (not theQ)
 				break;
 			else if (const std::exception_ptr* asEx = theQ->PGet<std::exception_ptr>())
 				std::rethrow_exception(*asEx);
