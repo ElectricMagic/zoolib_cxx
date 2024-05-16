@@ -19,3 +19,5 @@ add_library(ZooLib_Project_Server STATIC
 
 	${SourceFiles}
 	)
+
+target_compile_features(ZooLib_Project_Server PUBLIC cxx_std_14)

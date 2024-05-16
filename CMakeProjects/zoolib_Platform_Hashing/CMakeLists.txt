@@ -22,3 +22,5 @@ add_library(ZooLib_Platform_Hashing STATIC
 
 	${SourceFiles}
 	)
+
+target_compile_features(ZooLib_Platform_Hashing PUBLIC cxx_std_14)

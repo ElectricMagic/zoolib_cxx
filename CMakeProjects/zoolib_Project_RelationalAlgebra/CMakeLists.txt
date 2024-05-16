@@ -66,3 +66,5 @@ add_library(ZooLib_Project_RelationalAlgebra STATIC
 
 	${SourceFiles}
 	)
+
+target_compile_features(ZooLib_Project_RelationalAlgebra PUBLIC cxx_std_14)

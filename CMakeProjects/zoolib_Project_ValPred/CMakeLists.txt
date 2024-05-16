@@ -37,3 +37,5 @@ add_library(ZooLib_Project_ValPred STATIC
 
 	${SourceFiles}
 	)
+
+target_compile_features(ZooLib_Project_ValPred PUBLIC cxx_std_14)

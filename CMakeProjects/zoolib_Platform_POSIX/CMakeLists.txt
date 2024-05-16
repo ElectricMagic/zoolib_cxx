@@ -41,3 +41,5 @@ add_library(ZooLib_Platform_POSIX STATIC
 
 	${SourceFiles}
 	)
+
+target_compile_features(ZooLib_Platform_POSIX PUBLIC cxx_std_14)

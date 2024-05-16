@@ -70,3 +70,4 @@ add_library(ZooLib_Platform_Apple STATIC
 
 	${SourceFiles}
 	)
+target_compile_features(ZooLib_Platform_Apple PUBLIC cxx_std_14)

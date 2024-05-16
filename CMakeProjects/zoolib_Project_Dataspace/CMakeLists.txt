@@ -56,3 +56,5 @@ add_library(ZooLib_Project_Dataspace STATIC
 
 	${SourceFiles}
 	)
+
+target_compile_features(ZooLib_Project_Dataspace PUBLIC cxx_std_14)

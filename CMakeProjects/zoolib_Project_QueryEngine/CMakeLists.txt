@@ -53,3 +53,5 @@ add_library(ZooLib_Project_QueryEngine STATIC
 
 	${SourceFiles}
 	)
+
+target_compile_features(ZooLib_Project_QueryEngine PUBLIC cxx_std_14)
